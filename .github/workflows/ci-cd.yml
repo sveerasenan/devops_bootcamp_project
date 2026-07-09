@@ -1,0 +1,27 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run Tests
+        run: |
+          python tests/check_index.py
+      - name: Build Docker Image
+        run: |
+          docker build -t nginx-demo:latest .
+      - name: Verify Docker Image
+        run: |
+          docker images
